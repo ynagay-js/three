@@ -57,7 +57,7 @@ function onMouseHover(event) {
     }
 }
 
-window.addEventListener('mousemove', onMouseHover);
+window.addEventListener("mousemove", onMouseHover);
 
 function animate(){
     requestAnimationFrame(animate);
