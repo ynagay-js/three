@@ -4,6 +4,11 @@ import * as THREE from 'three'
 // create scene
 const scene = new THREE.Scene();
 
+//light
+// const ambientLight = new THREE.AmbientLight('red', 0.5);
+// scene.add(ambientLight);
+
+
 // create camera
 const camera = new THREE.PerspectiveCamera(
     75,
@@ -67,6 +72,7 @@ torus.position.set(0, 1.5, -1);
 // add torus on scene
 scene.add(torus);
 
+//create plane figure
 const plane = new THREE.Mesh(
     new THREE.PlaneGeometry(3, 3),
     textureMaterial
@@ -74,7 +80,6 @@ const plane = new THREE.Mesh(
 
 plane.position.set(0, -2, 0);
 scene.add(plane);
-
 
 
 // ongoing render
