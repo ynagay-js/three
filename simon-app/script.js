@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { OrbitControls } from './node_modules/three/examples/jsm/controls/OrbitControls'
 
 // Scene
 
@@ -11,10 +12,32 @@ const size = {
     height: 800
 }
 
+// Cursor
+
+const cursor = {
+    x: 0,
+    y: 0
+}
+
+// Mouse Coordinate Listener
+
+window.addEventListener('mousemove', (event) => {
+    cursor.x = event.clientX / size.width - 0.5;
+    cursor.y = - (event.clientY / size.height - 0.5); 
+    // console.log(cursor.x, cursor.y);
+})
+
+const aspectRatio = size.width / size.height;
+
 const camera = new THREE.PerspectiveCamera(
     75,
-    size.width / size.height
+    size.width / size.height,
+    1,
+    100
 );
+
+// const camera = new THREE.OrthographicCamera(-1 * aspectRatio, 1 * aspectRatio, 1, -1, 0.1, 100);
+
 camera.position.z = 3;
 
 scene.add(camera);
@@ -22,6 +45,12 @@ scene.add(camera);
 // Canvas
 
 const canvas = document.querySelector('.webgl');
+
+// Orbit controls
+
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+// controls.target.y = 2;
 
 // Renderer
 
@@ -34,7 +63,7 @@ renderer.setSize(size.width, size.height);
 // Group
 
 const group = new THREE.Group();
-group.scale.y = 2;
+group.scale.y = 0.8;
 scene.add(group);
 
 // Object
@@ -115,18 +144,28 @@ const tick = () => {
     const deltaTime = currentTime - time;
     time = currentTime;
 
-    //clock
+    // clock
     const elapsedTime = clock.getElapsedTime();
 
     cube.rotation.x += 0.01 * deltaTime;
-    cube2.rotation.y = elapsedTime;
-    cube2.position.y = Math.cos(elapsedTime);
+    // cube2.rotation.y = elapsedTime;
+    // cube2.position.y = Math.cos(elapsedTime);
     cube3.rotation.z += 0.01;
     cube3.position.z = Math.sin(elapsedTime);
 
-    //animate camera positon
+    // Animate camera position
+
     // camera.position.y = Math.sin(elapsedTime);
-    // camera.lookAt(group.position);
+    // camera.lookAt(group.position);    
+
+    // Control camera position with mouse (multiplying * 2 for more camera amplitude)
+
+    // camera.position.x = Math.sin(cursor.x * Math.PI * 2) * 2; 
+    // camera.position.z = Math.cos(cursor.x * Math.PI * 2) * 2; 
+    // camera.position.y = cursor.y * 3;
+    // camera.lookAt(cube2.position);
+
+    controls.update();
 
     renderer.render(scene, camera);
 } 
