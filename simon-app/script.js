@@ -8,9 +8,48 @@ const scene = new THREE.Scene();
 // Camera
 
 const size = {
-    width: 800,
-    height: 800
+    width: window.innerWidth,
+    height: window.innerHeight
 }
+
+const aspectRatio = size.width / size.height;
+
+// Resize Listener
+
+window.addEventListener('resize', () => {
+    // Update sizes
+    size.width = window.innerWidth;
+    size.height = window.innerHeight;
+    // console.log('Window has been resized');
+
+    // Update camera
+    camera.aspect = size.width / size.height;
+    camera.updateProjectionMatrix();
+
+    // Update renderer
+    renderer.setSize(size.width, size.height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+})
+
+// Fullscreen Listener
+
+document.addEventListener('dblclick', () => {
+    const fullscreenElement = document.fullscreenElement || document.webkitFullscreenElement;
+
+    if (!fullscreenElement) {
+        if (canvas.requestFullscreen) {
+            canvas.requestFullscreen();
+        } else if (canvas.webkitRequestFullscreen) {
+            canvas.webkitRequestFullscreen();
+        }        
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        }        
+    }
+})
 
 // Cursor
 
@@ -27,11 +66,9 @@ window.addEventListener('mousemove', (event) => {
     // console.log(cursor.x, cursor.y);
 })
 
-const aspectRatio = size.width / size.height;
-
 const camera = new THREE.PerspectiveCamera(
     75,
-    size.width / size.height,
+    aspectRatio,
     1,
     100
 );
@@ -88,7 +125,7 @@ cube.rotation.y = Math.PI * 0.25;
 
 const cube2 = new THREE.Mesh(
     new THREE.BoxGeometry(1, 1, 1),
-    new THREE.MeshBasicMaterial({color: 'blue'})
+    new THREE.MeshBasicMaterial({color: 'blue', wireframe: true})
 )
 cube2.position.x = 0;
 cube2.rotation.y = Math.PI * 0.25;
@@ -101,15 +138,34 @@ cube3.position.x = 2;
 cube3.rotation.y = Math.PI;
 
 const sphere = new THREE.Mesh(
-    new THREE.SphereGeometry(0.25),
-    new THREE.MeshBasicMaterial({color: 'white'})
+    new THREE.SphereGeometry(0.5, 32, 32),
+    new THREE.MeshBasicMaterial({color: 'white', wireframe: true})
 )
-sphere.position.set(-1, -0.75, 0);
+sphere.position.set(-1, -1.5, 0);
+
+// Creating own Buffer Geometry (triangle)
+
+const geometry = new THREE.BufferGeometry();
+// add vertices with Float32Array
+const positionArray = new Float32Array([
+    0, 0, 0, // First vertex
+    0, 1, 0, // Second vertex
+    1, 0, 0  // Third vertex
+]);
+const positionAttribute = new THREE.BufferAttribute(positionArray, 3);
+geometry.setAttribute('position', positionAttribute);
+
+const triangle = new THREE.Mesh(
+    geometry,
+    new THREE.MeshBasicMaterial({color: 'yellow', wireframe: true})
+);
+triangle.position.set(0, 1, 0);
 
 group.add(cube);
 group.add(cube2);
 group.add(cube3);
 group.add(sphere);
+group.add(triangle);
 // camera.lookAt(new THREE.Vector3(0, 1, 0));
 
 // Axes Helper
