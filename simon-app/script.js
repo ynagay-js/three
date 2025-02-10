@@ -1,5 +1,33 @@
 import * as THREE from 'three'
 import { OrbitControls } from './node_modules/three/examples/jsm/controls/OrbitControls'
+import GUI from 'lil-gui'
+
+/**
+*Debug
+*/
+
+const gui = new GUI({
+    width: 300,
+    title: 'Debug UI',
+    closeFolders: false
+});
+// gui.hide();
+document.addEventListener('keydown', (event) => {
+    if(event.key == 'd') {
+        gui.show(gui._hidden);
+    }
+})
+const sphereTweaks = gui.addFolder('Awesome sphere');
+// sphereTweaks.close();
+
+// Debug Object
+const debugObject = {
+    color: '#aa64a8',
+    spin: () => {
+        gsap.to(sphere.rotation, { duration: 2, y: sphere.rotation.y + Math.PI * 2 })
+    },
+    subdivision: 10
+};
 
 // Scene
 
@@ -137,9 +165,14 @@ const cube3 = new THREE.Mesh(
 cube3.position.x = 2;
 cube3.rotation.y = Math.PI;
 
+
+const sphereMaterial = new THREE.MeshBasicMaterial({
+    color: debugObject.color,
+    wireframe: true
+})
 const sphere = new THREE.Mesh(
     new THREE.SphereGeometry(0.5, 32, 32),
-    new THREE.MeshBasicMaterial({color: 'white', wireframe: true})
+    sphereMaterial
 )
 sphere.position.set(-1, -1.5, 0);
 
@@ -161,6 +194,39 @@ const triangle = new THREE.Mesh(
 );
 triangle.position.set(0, 1, 0);
 
+// add GUI tweakes
+
+// gui.add(sphere.position, 'y', -3, 3, 0.01);
+//or
+sphereTweaks
+    .add(sphere.position, 'y')
+    .min(-3)
+    .max(3)
+    .step(0.01)
+    .name('elevation')
+
+    sphereTweaks.add(sphere, 'visible');
+sphereTweaks.add(sphereMaterial, 'wireframe').name('sphere wireframe');
+sphereTweaks
+    .addColor(debugObject, 'color')
+    .onChange(() => {        
+        // console.log(value.getHexString());
+        sphereMaterial.color.set(debugObject.color);
+    })
+    sphereTweaks.add(debugObject, 'spin');
+sphereTweaks
+    .add(debugObject, 'subdivision')
+    .min(10)
+    .max(50)
+    .step(1)
+    .onFinishChange(() => {
+        sphere.geometry.dispose();
+        sphere.geometry = new THREE.SphereGeometry(
+            0.5, debugObject.subdivision, debugObject.subdivision
+        )
+    })
+
+
 group.add(cube);
 group.add(cube2);
 group.add(cube3);
@@ -181,14 +247,14 @@ const clock = new THREE.Clock();
 
 // GSAP
 
-gsap.to(sphere.position, {
+/* gsap.to(sphere.position, {
     duration: 1,
     delay: 1,
     x: 1,
     ease: "power1.inOut",
     repeat: -1,
     yoyo: true
-})
+}) */
 
 // GSAP END
 
