@@ -205,7 +205,7 @@ sphereTweaks
     .step(0.01)
     .name('elevation')
 
-    sphereTweaks.add(sphere, 'visible');
+sphereTweaks.add(sphere, 'visible');
 sphereTweaks.add(sphereMaterial, 'wireframe').name('sphere wireframe');
 sphereTweaks
     .addColor(debugObject, 'color')
