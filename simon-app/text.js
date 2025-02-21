@@ -1,7 +1,7 @@
 import * as THREE from 'three'
-import { OrbitControls } from './node_modules/three/examples/jsm/controls/OrbitControls'
-import { FontLoader } from './node_modules/three/examples/jsm/loaders/FontLoader'
-import { TextGeometry } from './node_modules/three/examples/jsm/geometries/TextGeometry'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'
 
 /**
  * Scene
@@ -46,7 +46,7 @@ renderer.setSize(size.width, size.height);
  */
 
 const textureLoader = new THREE.TextureLoader();
-const matcapTexture = textureLoader.load('/static/textures/matcaps/7.png');
+const matcapTexture = textureLoader.load('textures/matcaps/7.png');
 matcapTexture.colorSpace = THREE.SRGBColorSpace;
 
 /**
@@ -55,7 +55,7 @@ matcapTexture.colorSpace = THREE.SRGBColorSpace;
 
 const fontLoader = new FontLoader();
 fontLoader.load(
-    '/static/fonts/helvetiker_regular.typeface.json',
+    'fonts/helvetiker_regular.typeface.json',
     (font) => {
         const textGeometry = new TextGeometry(
             'Hello Three.js',
