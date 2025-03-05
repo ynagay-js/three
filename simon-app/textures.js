@@ -59,7 +59,7 @@ loadingManager.onStart = () =>
         console.log('loading error')
     }
 const textureLoader = new THREE.TextureLoader(loadingManager);
-const texture = textureLoader.load('/static/textures/door/color.jpg')
+const texture = textureLoader.load('/static/textures/door/color.jpg');
 texture.colorSpace = THREE.SRGBColorSpace;
 // texture.wrapS = THREE.RepeatWrapping;
 // texture.wrapT = THREE.RepeatWrapping;
